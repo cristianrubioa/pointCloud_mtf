@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(pointCloud_mtf)
+project(pointcloud_mtf)
 
 set(CMAKE_BUILD_TYPE "Release")
 set(CMAKE_CXX_FLAGS "-std=c++11")
@@ -16,11 +16,12 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 find_package(PCL REQUIRED)
-
+find_package(Eigen3 REQUIRED)
 
 include_directories(
   include
         ${catkin_INCLUDE_DIRS} 
+        ${EIGEN3_INCLUDE_DIR} 
 	${PCL_INCLUDE_DIRS}
 )
 add_definitions(${PCL_DEFINITIONS})
@@ -32,6 +33,5 @@ catkin_package(
   INCLUDE_DIRS include
 )
 
-set(MAIN_SOURCE "src/pointCloud_mtf.cpp")
-add_executable(${PROJECT_NAME} ${MAIN_SOURCE})
+add_executable(pointcloud_mtf src/transform_points.cpp)
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${PCL_LIBRARIES})
