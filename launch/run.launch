@@ -1,0 +1,9 @@
+<launch>
+
+    <!--- pointCloud_mtf-->
+    <node pkg="pointcloud_mtf" type="pointcloud_mtf" name="transform_points" output="screen" />
+
+    <!--- Run Rviz-->
+    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find pointcloud_mtf)/rviz/test.rviz" />
+
+</launch>
