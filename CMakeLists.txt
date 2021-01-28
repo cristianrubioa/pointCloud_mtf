@@ -33,5 +33,5 @@ catkin_package(
   INCLUDE_DIRS include
 )
 
-add_executable(pointcloud_mtf src/transform_points.cpp)
+add_executable(transform_points src/transform_points.cpp)
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${PCL_LIBRARIES})
