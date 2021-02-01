@@ -27,12 +27,14 @@ float offset_yaw = 180 * M_PI / 180;  // 180 degress
 float offset_roll = 180 * M_PI / 180; // 180 degress
 float offset_x = 0.08;                // 8 centimeters
 
+double roll, pitch, yaw;
+
 void angles(const sensor_msgs::ImuConstPtr &msg)
 {
-    double roll, pitch, yaw;
     tf::Quaternion orientation;
     tf::quaternionMsgToTF(msg->orientation, orientation);
     tf::Matrix3x3(orientation).getRPY(roll, pitch, yaw);
+
     ROS_INFO("Imu Seq: [%d]", msg->header.seq);
     ROS_INFO("QUATERNION Imu Orientation x: [%f], y: [%f], z: [%f], w: [%f]", msg->orientation.x, msg->orientation.y, msg->orientation.z, msg->orientation.w);
     ROS_INFO("EULER Imu Orientation Roll: [%f], Pitch: [%f], Yaw: [%f]", roll, pitch, yaw);
@@ -49,6 +51,7 @@ void transform(const sensor_msgs::PointCloud2ConstPtr &scan)
     transform_1.rotate(Eigen::AngleAxisf(offset_pitch, Eigen::Vector3f::UnitY())); // Rotate offset_pitch degress
     transform_1.rotate(Eigen::AngleAxisf(offset_roll, Eigen::Vector3f::UnitX()));  // Rotate offset_roll degress
     //transform_1.rotate (Eigen::AngleAxisf (offset_yaw, Eigen::Vector3f::UnitZ()));	// Rotate offset_yaw degress
+    ROS_INFO("Pitch -> Pointcloud: [%f]", pitch);
 
     // Traslation
     transform_1.translation() << offset_x, 0.0, 0.0;
@@ -70,9 +73,10 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "input");
     ros::NodeHandle nh;
-    //printf("Running ...");
+
     ros::Subscriber subimu = nh.subscribe<sensor_msgs::Imu>("/vectornav/IMU", 1000, angles);          // /vectornav/IMU  /imu/data
     ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2>("/quanergy/points", 100, transform); // /quanergy/points
     pub1 = nh.advertise<sensor_msgs::PointCloud2>("/velodyne_points", 100);
+
     ros::spin();
 }
